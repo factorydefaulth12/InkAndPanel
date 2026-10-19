@@ -61,13 +61,13 @@ const originalStories=[{"id":"iap-original-sea","title":"The Sea Keeps Our Secre
 const originalComic={"id":"iap-comic-nightbus","title":"The Last Bus to Orun","author":"InkAndPanel Original · AI-assisted","format":"Comic","genre":"Fantasy","tags":["urban fantasy","night journey","friendship"],"desc":"At 11:59 p.m., the last bus in the city takes a route that isn't on any map. Kemi boards to get home. The quiet girl beside her knows the bus is carrying them somewhere else.","chapter":"Episode 1: The Route That Wasn't There","text":"Kemi missed the last regular bus by twelve seconds. The one that stopped beside her had no route number, only a glowing symbol above the windscreen. Inside, a girl in a silver jacket moved her bag from the empty seat. “If it asks where you’re going,” she said, “don’t say home.”","reads":0,"panels":[]};originalComic.panels=[0,1,2,3].map(makeComicPanel);originalStories.push(originalComic);
 originalStories[0].cover=makeCoverArt('sea');originalStories[1].cover=makeCoverArt('house');originalStories.forEach(s=>{s.text=s.chapters[0].text;s.chapter=s.chapters[0].title});
 const savedStories=JSON.parse(localStorage.getItem('iap_stories')||'null')||[];
-let stories=[...originalStories.filter(o=>!savedStories.some(s=>s.id===o.id)),...savedStories].filter(s=>!['s1','s2','s3','s4','s5','s6','s7','s8'].includes(s.id));
+let stories=[...originalStories,...savedStories.filter(s=>!originalStories.some(o=>o.id===s.id)).map(s=>({...s,author:s.author==='InkReader'?'Anonymous creator':s.author}))].filter(s=>!['s1','s2','s3','s4','s5','s6','s7','s8'].includes(s.id));
 let saved=new Set(JSON.parse(localStorage.getItem('iap_saved')||'[]'));
 let liked=new Set(JSON.parse(localStorage.getItem('iap_liked')||'[]'));
 let reading=new Set(JSON.parse(localStorage.getItem('iap_reading')||'[]'));
 let drafts=JSON.parse(localStorage.getItem('iap_drafts')||'[]');
 let comments=JSON.parse(localStorage.getItem('iap_comments')||'{}');
-let profile=JSON.parse(localStorage.getItem('iap_profile')||'null')||{name:'Anonymous creator',handle:'anonymous',bio:'A reader and writer finding my next story. ✦'};
+let profile=JSON.parse(localStorage.getItem('iap_profile')||'null')||{name:'Anonymous creator',handle:'anonymous',bio:'A reader and writer finding my next story. ✦'};if(profile.name==='InkReader'&&profile.handle==='inkreader'){profile.name='Anonymous creator';profile.handle='anonymous';}
 let activeFilter='All',libraryTab='Saved',format='Novel',currentStory=null,currentChapter=0,toastTimer=null;
 function persist(){localStorage.setItem('iap_stories',JSON.stringify(stories));localStorage.setItem('iap_saved',JSON.stringify([...saved]));localStorage.setItem('iap_liked',JSON.stringify([...liked]));localStorage.setItem('iap_reading',JSON.stringify([...reading]));localStorage.setItem('iap_drafts',JSON.stringify(drafts));localStorage.setItem('iap_comments',JSON.stringify(comments));localStorage.setItem('iap_profile',JSON.stringify(profile))}
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
